@@ -1,5 +1,5 @@
 <template>
-  <!-- DESKTOP SIDEBAR -->
+  <!-- DESKTOP / TABLET SIDEBAR -->
   <aside class="ig-sidebar">
     <div class="ig-sidebar-inner">
       <div class="ig-sidebar-top">
@@ -128,16 +128,11 @@ const mobileMenu = computed(() => {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 72px;
+  width: 220px;
   background: #fff;
   z-index: 100;
   overflow: hidden;
   transition: width 0.22s ease;
-}
-
-.ig-sidebar:hover {
-  width: 220px;
-  box-shadow: none;
 }
 
 .ig-sidebar-inner {
@@ -255,20 +250,14 @@ const mobileMenu = computed(() => {
 }
 
 .ig-menu-text {
-  opacity: 0;
-  transform: translateX(-6px);
-  pointer-events: none;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
   overflow: hidden;
   text-overflow: ellipsis;
   transition:
     opacity 0.16s ease,
     transform 0.16s ease;
-}
-
-.ig-sidebar:hover .ig-menu-text {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
 }
 
 .ig-menu-badge {
@@ -292,6 +281,8 @@ const mobileMenu = computed(() => {
 .ig-mobile-nav {
   display: none;
 }
+
+/* HEIGHT OPTIMIZATION */
 
 @media (max-height: 760px) {
   .ig-sidebar-inner {
@@ -325,6 +316,30 @@ const mobileMenu = computed(() => {
 
   .ig-menu-icon {
     height: 42px;
+  }
+}
+
+/* TABLET MODE */
+
+@media (min-width: 861px) and (max-width: 1199px) {
+  .ig-sidebar {
+    width: 72px;
+  }
+
+  .ig-sidebar:hover {
+    width: 220px;
+  }
+
+  .ig-menu-text {
+    opacity: 0;
+    transform: translateX(-6px);
+    pointer-events: none;
+  }
+
+  .ig-sidebar:hover .ig-menu-text {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
   }
 }
 

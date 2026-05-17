@@ -59,20 +59,38 @@ button {
   background: #fff;
 }
 
-/* ВАЖНО: теперь контент всегда отступает только на закрытый sidebar */
+/* DESKTOP */
+/* Sidebar открыт на 220px, поэтому контент отступает на 220px */
 .ig-main {
-  margin-left: 72px;
   min-height: 100vh;
+  margin-left: 220px;
+  width: calc(100% - 220px);
+  overflow-x: clip;
+  transition:
+    margin-left 0.22s ease,
+    width 0.22s ease;
 }
 
+/* TABLET */
+/* Sidebar закрыт на 72px, hover раскрывается поверх контента */
+@media (min-width: 861px) and (max-width: 1199px) {
+  .ig-main {
+    margin-left: 72px;
+    width: calc(100% - 72px);
+  }
+}
+
+/* MOBILE */
+/* Sidebar скрыт, работает нижняя навигация */
 @media (max-width: 860px) {
   .ig-main {
     margin-left: 0;
-    padding-bottom: 56px;
     width: 100%;
+    padding-bottom: 56px;
     overflow-x: clip;
   }
 }
+
 html,
 body,
 #app,

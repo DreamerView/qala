@@ -361,9 +361,9 @@ const toggleSaved = (id) => {
 
 .qala-events-shell {
   width: 100%;
-  max-width: 980px;
+  max-width: none;
   margin: 0 auto;
-  padding: 28px 20px 54px;
+  padding: 28px 32px 54px;
 }
 
 .qala-events-header {
@@ -554,7 +554,7 @@ const toggleSaved = (id) => {
 
 .qala-events-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 18px;
 }
 
@@ -752,7 +752,7 @@ const toggleSaved = (id) => {
 
 @media (max-width: 860px) {
   .qala-events-shell {
-    max-width: 460px;
+    max-width: none;
     padding: 18px 14px 82px;
   }
 
