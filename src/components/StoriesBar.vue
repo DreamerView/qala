@@ -42,14 +42,14 @@ defineProps({
 }
 
 .ig-story {
-  width: 72px;
-  min-width: 72px;
+  width: 80px;
+  min-width: 80px;
   text-align: center;
 }
 
 .ig-story-button {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   border: 0;
   padding: 0;
   background: transparent;
@@ -57,8 +57,8 @@ defineProps({
 }
 
 .ig-story-ring {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   padding: 3px;
   display: block;
   border-radius: 50%;
@@ -111,7 +111,7 @@ defineProps({
 }
 
 .ig-story-name {
-  width: 72px;
+  width: 80px;
   margin-top: 0.2rem;
   font-size: 13px;
   line-height: 17px;

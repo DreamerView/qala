@@ -3,17 +3,18 @@
   <aside class="ig-sidebar">
     <div class="ig-sidebar-inner">
       <div class="ig-sidebar-top">
-        <div class="ig-logo">
+        <RouterLink to="/" class="ig-logo" aria-label="Qala">
           <SvgIcon name="instagram" :size="28" />
-        </div>
+        </RouterLink>
 
         <div class="ig-sidebar-body">
           <nav class="ig-menu">
-            <button
+            <RouterLink
               v-for="item in menu"
               :key="item.title"
+              :to="item.to || '/'"
               class="ig-menu-item"
-              :class="{ active: item.active }"
+              :class="{ active: isActiveRoute(item) }"
             >
               <span class="ig-menu-icon">
                 <SvgIcon :name="getMenuIcon(item)" :size="24" />
@@ -24,23 +25,23 @@
               </span>
 
               <span class="ig-menu-text">{{ item.title }}</span>
-            </button>
+            </RouterLink>
           </nav>
         </div>
       </div>
 
       <div class="ig-bottom-menu">
-        <button class="ig-menu-item">
+        <button class="ig-menu-item" type="button">
           <span class="ig-menu-icon">
-            <SvgIcon name="menu" :size="30" />
+            <SvgIcon name="menu" :size="24" />
           </span>
 
           <span class="ig-menu-text">Ещё</span>
         </button>
 
-        <button class="ig-menu-item">
+        <button class="ig-menu-item" type="button">
           <span class="ig-menu-icon">
-            <SvgIcon name="grid" :size="30" />
+            <SvgIcon name="grid" :size="24" />
           </span>
 
           <span class="ig-menu-text text-truncate">
@@ -53,11 +54,12 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="ig-mobile-nav">
-    <button
+    <RouterLink
       v-for="item in mobileMenu"
       :key="item.title"
+      :to="item.to || '/'"
       class="ig-mobile-nav-item"
-      :class="{ active: item.active }"
+      :class="{ active: isActiveRoute(item) }"
       :aria-label="item.title"
     >
       <SvgIcon :name="getMenuIcon(item)" :size="30" />
@@ -65,13 +67,16 @@
       <span v-if="item.badge" class="ig-mobile-badge">
         {{ item.badge }}
       </span>
-    </button>
+    </RouterLink>
   </nav>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import SvgIcon from './SvgIcon.vue'
+
+const route = useRoute()
 
 const props = defineProps({
   menu: {
@@ -80,8 +85,20 @@ const props = defineProps({
   },
 })
 
+const isActiveRoute = (item) => {
+  if (!item.to) {
+    return false
+  }
+
+  if (item.exact) {
+    return route.path === item.to
+  }
+
+  return route.path === item.to || route.path.startsWith(`${item.to}/`)
+}
+
 const getMenuIcon = (item) => {
-  if (item.active && item.activeIcon) {
+  if (isActiveRoute(item) && item.activeIcon) {
     return item.activeIcon
   }
 
@@ -93,7 +110,7 @@ const mobileMenu = computed(() => {
     'home',
     'search',
     'plus',
-    'compass',
+    'heart',
     'user-circle',
   ]
 
@@ -149,6 +166,7 @@ const mobileMenu = computed(() => {
   margin-bottom: 22px;
   color: #111;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .ig-sidebar-body {
@@ -213,17 +231,18 @@ const mobileMenu = computed(() => {
   font-size: 16px;
   line-height: 1.2;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .ig-menu-item:hover {
   background: #f7f7f7;
+  color: #000;
 }
 
 .ig-menu-item.active {
   font-weight: 700;
 }
 
-/* ВАЖНО: этот блок у тебя пропал */
 .ig-menu-icon {
   width: 46px;
   min-width: 46px;
@@ -341,6 +360,7 @@ const mobileMenu = computed(() => {
     color: #111;
     display: grid;
     place-items: center;
+    text-decoration: none;
   }
 
   .ig-mobile-nav-item.active {

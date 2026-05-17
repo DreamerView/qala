@@ -3,32 +3,33 @@ export const menu = [
     title: 'Главная',
     icon: 'home',
     activeIcon: 'home-fill',
-    active: true,
+    to: '/',
+    exact: true,
   },
   {
     title: 'Поиск',
     icon: 'search',
-    activeIcon: 'search',
-  },
-  {
-    title: 'Интересное',
-    icon: 'compass',
-    activeIcon: 'compass-fill',
+    activeIcon: 'search-fill',
+    to: '/search',
   },
   {
     title: 'Уведомления',
     icon: 'heart',
     activeIcon: 'heart-fill',
+    to: '/notifications',
+    badge: 3,
   },
   {
     title: 'Создать',
     icon: 'plus',
-    activeIcon: 'plus',
+    activeIcon: 'plus-fill',
+    to: '/create',
   },
   {
     title: 'Профиль',
     icon: 'user-circle',
     activeIcon: 'user-circle-fill',
+    to: '/profile',
   },
 ]
 

@@ -1,19 +1,13 @@
 <template>
+  <Teleport to="body">
+    <QalaMapModal />
+  </Teleport>
+
   <div class="ig-app">
     <InstagramSidebar :menu="menu" />
 
     <main class="ig-main">
-      <div class="ig-shell">
-        <section class="ig-feed">
-          <StoriesBar :stories="stories" />
-          <FeedPost :post="post" />
-        </section>
-
-        <RightSidebar
-          :profile="profile"
-          :suggestions="suggestions"
-        />
-      </div>
+      <RouterView />
     </main>
 
     <FloatingChat :avatars="chatAvatars" />
@@ -21,20 +15,14 @@
 </template>
 
 <script setup>
-import InstagramSidebar from './components/InstagramSidebar.vue'
-import StoriesBar from './components/StoriesBar.vue'
-import FeedPost from './components/FeedPost.vue'
-import RightSidebar from './components/RightSidebar.vue'
-import FloatingChat from './components/FloatingChat.vue'
+import InstagramSidebar from '@/components/InstagramSidebar.vue'
+import FloatingChat from '@/components/FloatingChat.vue'
+import QalaMapModal from '@/components/modal/QalaMapModal.vue'
 
 import {
   menu,
-  stories,
-  post,
-  profile,
-  suggestions,
   chatAvatars,
-} from './data/instagramData'
+} from '@/data/instagramData'
 </script>
 
 <style>
@@ -77,50 +65,11 @@ button {
   min-height: 100vh;
 }
 
-.ig-shell {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding-top: 24px;
-  display: grid;
-  grid-template-columns: 620px 300px;
-  column-gap: 62px;
-  align-items: start;
-}
-
-.ig-feed {
-  min-width: 0;
-}
-
-@media (max-width: 1180px) {
-  .ig-shell {
-    grid-template-columns: 620px;
-    max-width: 620px;
-  }
-}
-
 @media (max-width: 860px) {
   .ig-main {
     margin-left: 0;
     padding-bottom: 56px;
     width: 100%;
-    overflow-x: hidden;
-  }
-
-  .ig-shell {
-    width: 100%;
-    max-width: 460px;
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 18px;
-    padding-left: 0;
-    padding-right: 0;
-    margin: 0 auto;
-  }
-
-  .ig-feed {
-    width: 100%;
-    max-width: 460px;
-    min-width: 0;
     overflow-x: hidden;
   }
 }
