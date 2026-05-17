@@ -3,7 +3,7 @@
     <div class="qala-events-shell">
       <header class="qala-events-header">
         <div>
-          <h1 class="qala-events-title">События</h1>
+          <h1 class="qala-events-title">EventGO</h1>
           <p class="qala-events-subtitle">
             Найди интересные мероприятия рядом с собой
           </p>

@@ -70,7 +70,14 @@ button {
     margin-left: 0;
     padding-bottom: 56px;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
+}
+html,
+body,
+#app,
+.ig-app,
+.ig-main {
+  scroll-behavior: auto !important;
 }
 </style>

@@ -2,9 +2,9 @@
   <div class="qala-event-page">
     <div class="qala-event-shell">
       <div class="qala-event-topbar">
-        <RouterLink to="/events" class="qala-back-link">
+        <RouterLink to="/" class="qala-back-link">
           <i class="bi bi-arrow-left"></i>
-          <span>События</span>
+          <span>Назад</span>
         </RouterLink>
 
         <button
@@ -422,11 +422,20 @@ watch(
 }
 
 .qala-event-topbar {
-  height: 46px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 18px;
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
 }
 
 .qala-back-link {
@@ -947,7 +956,10 @@ watch(
   }
 
   .qala-event-topbar {
+    top: 0;
+    height: 52px;
     margin-bottom: 12px;
+    padding: 0 2px;
   }
 
   .qala-event-hero {
