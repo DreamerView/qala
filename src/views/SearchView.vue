@@ -2,7 +2,7 @@
   <div class="ig-search-page">
     <div class="ig-search-shell">
       <header class="ig-search-header">
-        <h1 class="ig-search-title">Поиск</h1>
+        <HeaderBlock title="Поиск" />
 
         <SearchBox
           v-model="searchQuery"
@@ -34,13 +34,6 @@
           :items="recentSearches"
           @select="selectRecentSearch"
         />
-
-        <EmptyState
-          v-else
-          icon="bi bi-search"
-          title="История поиска пуста"
-          text="Когда ты начнёшь искать события, они появятся здесь."
-        />
       </section>
 
       <section class="ig-results-section">
@@ -62,9 +55,9 @@
 
         <EmptyState
           v-else
-          icon="bi bi-emoji-neutral"
-          title="Ничего не найдено"
-          text="Попробуй изменить запрос или выбрать другую категорию."
+          icon="bi bi-search"
+          title="История поиска пуста"
+          text="Когда ты начнёшь искать события, они появятся здесь."
         />
       </section>
     </div>
@@ -76,10 +69,11 @@ import { computed, ref } from 'vue'
 
 import SearchBox from '@/components/search/SearchBox.vue'
 import SectionHeader from '@/components/search/SectionHeader.vue'
-import EmptyState from '@/components/search/EmptyState.vue'
+import EmptyState from '@/components/global/EmptyState.vue'
 import RecentSearchList from '@/components/search/RecentSearchList.vue'
 import Card from '../components/global/Card.vue'
 import CategoryList from '../components/global/CategoryList.vue'
+import HeaderBlock from '../components/global/HeaderBlock.vue'
 
 const searchQuery = ref('')
 const activeCategory = ref('Все')

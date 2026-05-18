@@ -1,31 +1,51 @@
 <template>
-  <section class="qala-empty-state">
-    <div class="qala-empty-icon">
-      <i class="bi bi-calendar-x"></i>
+  <section class="empty-state">
+    <div class="empty-state-icon">
+      <i :class="icon"></i>
     </div>
 
-    <h3>События не найдены</h3>
+    <h3>{{ title }}</h3>
 
     <p>
-      Попробуй изменить запрос или выбрать другую категорию.
+      {{ text }}
     </p>
 
     <button
+      v-if="buttonText"
       type="button"
-      class="qala-empty-btn"
-      @click="emit('reset')"
+      class="empty-state-btn"
+      @click="emit('action')"
     >
-      Сбросить фильтры
+      {{ buttonText }}
     </button>
   </section>
 </template>
 
 <script setup>
-const emit = defineEmits(['reset'])
+defineProps({
+  icon: {
+    type: String,
+    default: 'bi bi-inbox',
+  },
+  title: {
+    type: String,
+    default: 'Ничего не найдено',
+  },
+  text: {
+    type: String,
+    default: 'Попробуй изменить запрос или выбрать другую категорию.',
+  },
+  buttonText: {
+    type: String,
+    default: '',
+  },
+})
+
+const emit = defineEmits(['action'])
 </script>
 
 <style scoped>
-.qala-empty-state {
+.empty-state {
   min-height: 300px;
   border: 1px dashed #e5e5e5;
   border-radius: 22px;
@@ -36,7 +56,7 @@ const emit = defineEmits(['reset'])
   padding: 36px 20px;
 }
 
-.qala-empty-icon {
+.empty-state-icon {
   width: 58px;
   height: 58px;
   margin: 0 auto 14px;
@@ -49,14 +69,14 @@ const emit = defineEmits(['reset'])
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-.qala-empty-state h3 {
+.empty-state h3 {
   margin: 0 0 7px;
   color: #111;
   font-size: 18px;
   font-weight: 850;
 }
 
-.qala-empty-state p {
+.empty-state p {
   max-width: 310px;
   margin: 0 auto 18px;
   color: #777;
@@ -64,7 +84,7 @@ const emit = defineEmits(['reset'])
   line-height: 1.45;
 }
 
-.qala-empty-btn {
+.empty-state-btn {
   height: 40px;
   padding: 0 16px;
   border: 0;
@@ -73,5 +93,9 @@ const emit = defineEmits(['reset'])
   color: #fff;
   font-size: 14px;
   font-weight: 800;
+}
+
+.empty-state-btn:active {
+  transform: scale(0.98);
 }
 </style>

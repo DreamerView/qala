@@ -1,9 +1,12 @@
 <template>
   <div class="qala-events-page">
     <div class="qala-events-shell">
-      <EventsHeader
+      <HeaderBlock
         title="EventGO"
         subtitle="Найди интересные мероприятия рядом с собой"
+        action-to="/map"
+        action-icon="bi bi-map"
+        action-text="Карта"
       />
 
       <section class="qala-events-tools">
@@ -39,9 +42,13 @@
         />
       </section>
 
-      <EventsEmptyState
+      <EmptyState
         v-else
-        @reset="resetFilters"
+        icon="bi bi-calendar-x"
+        title="События не найдены"
+        text="Попробуй изменить запрос или выбрать другую категорию."
+        button-text="Сбросить фильтры"
+        @action="resetFilters"
       />
     </div>
   </div>
@@ -56,7 +63,8 @@ import EventsSortDropdown from '@/components/events/EventsSortDropdown.vue'
 import CategoryList from '@/components/global/CategoryList.vue'
 import EventsSummary from '@/components/events/EventsSummary.vue'
 import Card from '@/components/global/Card.vue'
-import EventsEmptyState from '@/components/events/EventsEmptyState.vue'
+import EmptyState from '@/components/global/EmptyState.vue'
+import HeaderBlock from '@/components/global/HeaderBlock.vue'
 
 const searchQuery = ref('')
 const selectedCategory = ref('Все')
