@@ -361,7 +361,7 @@ const toggleSaved = (id) => {
 
 .qala-events-shell {
   width: 100%;
-  max-width: none;
+  max-width: 1480px;
   margin: 0 auto;
   padding: 28px 32px 54px;
 }
@@ -554,7 +554,7 @@ const toggleSaved = (id) => {
 
 .qala-events-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 18px;
 }
 
@@ -750,6 +750,32 @@ const toggleSaved = (id) => {
   font-weight: 800;
 }
 
+/* LARGE DESKTOP / 4K */
+@media (min-width: 1800px) {
+  .qala-events-shell {
+    max-width: 1640px;
+  }
+}
+
+/* ULTRA WIDE / 8K */
+@media (min-width: 2400px) {
+  .qala-events-shell {
+    max-width: 1760px;
+  }
+}
+
+/* TABLET */
+@media (min-width: 861px) and (max-width: 1199px) {
+  .qala-events-shell {
+    padding: 24px 24px 54px;
+  }
+
+  .qala-events-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* MOBILE */
 @media (max-width: 860px) {
   .qala-events-shell {
     max-width: none;

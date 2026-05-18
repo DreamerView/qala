@@ -7,206 +7,214 @@
           <p>Добавь новое городское событие в Qala</p>
         </div>
 
-        <RouterLink to="/events" class="qala-create-close">
+        <button
+          type="button"
+          class="qala-create-close"
+          @click="goBack"
+        >
           <i class="bi bi-x-lg"></i>
-        </RouterLink>
+        </button>
       </header>
 
       <form class="qala-create-card" @submit.prevent="submitEvent">
-        <section class="qala-upload-section">
-          <label class="qala-cover-upload">
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              @change="handleImageUpload"
-            />
-
-            <img
-              v-if="form.image"
-              :src="form.image"
-              alt="Обложка события"
-              class="qala-cover-preview"
-            />
-
-            <div v-else class="qala-cover-placeholder">
-              <div class="qala-upload-icon">
-                <i class="bi bi-image"></i>
-              </div>
-
-              <strong>Добавить обложку</strong>
-              <span>PNG, JPG или WEBP</span>
-            </div>
-          </label>
-        </section>
-
-        <section class="qala-form-section">
-          <div class="qala-form-group">
-            <label>Название события</label>
-
-            <input
-              v-model="form.title"
-              type="text"
-              class="qala-input"
-              placeholder="Например: Frontend Meetup Karaganda"
-              required
-            />
-          </div>
-
-          <div class="qala-form-group">
-            <label>Категория</label>
-
-            <div class="qala-category-grid">
-              <button
-                v-for="category in categories"
-                :key="category"
-                type="button"
-                class="qala-category-btn"
-                :class="{ active: form.category === category }"
-                @click="form.category = category"
-              >
-                {{ category }}
-              </button>
-            </div>
-          </div>
-
-          <div class="qala-form-row">
-            <div class="qala-form-group">
-              <label>Дата</label>
-
+        <div class="qala-create-left">
+          <section class="qala-upload-section">
+            <label class="qala-cover-upload">
               <input
-                v-model="form.date"
-                type="date"
-                class="qala-input"
-                required
+                type="file"
+                accept="image/*"
+                hidden
+                @change="handleImageUpload"
               />
-            </div>
 
-            <div class="qala-form-group">
-              <label>Время</label>
-
-              <input
-                v-model="form.time"
-                type="time"
-                class="qala-input"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="qala-form-group">
-            <label>Место проведения</label>
-
-            <input
-              v-model="form.location"
-              type="text"
-              class="qala-input"
-              placeholder="Например: IT Hub Karaganda"
-              required
-            />
-          </div>
-
-          <div class="qala-form-group">
-            <label>Адрес</label>
-
-            <input
-              v-model="form.address"
-              type="text"
-              class="qala-input"
-              placeholder="Караганда, проспект Бухар-Жырау 32"
-            />
-          </div>
-
-          <div class="qala-form-group">
-            <label>Описание</label>
-
-            <textarea
-              v-model="form.description"
-              class="qala-textarea"
-              rows="5"
-              placeholder="Расскажи, что будет на событии, кому оно подходит и почему стоит прийти"
-              required
-            ></textarea>
-          </div>
-
-          <div class="qala-form-row">
-            <div class="qala-form-group">
-              <label>Стоимость</label>
-
-              <input
-                v-model="form.price"
-                type="text"
-                class="qala-input"
-                placeholder="Бесплатно / от 3000 ₸"
-              />
-            </div>
-
-            <div class="qala-form-group">
-              <label>Лимит участников</label>
-
-              <input
-                v-model="form.limit"
-                type="number"
-                min="1"
-                class="qala-input"
-                placeholder="100"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section class="qala-preview-section">
-          <h2>Предпросмотр</h2>
-
-          <article class="qala-preview-card">
-            <div class="qala-preview-image-wrap">
               <img
                 v-if="form.image"
                 :src="form.image"
-                alt="Preview"
-                class="qala-preview-image"
+                alt="Обложка события"
+                class="qala-cover-preview"
               />
 
-              <div v-else class="qala-preview-empty">
-                <i class="bi bi-image"></i>
-              </div>
+              <div v-else class="qala-cover-placeholder">
+                <div class="qala-upload-icon">
+                  <i class="bi bi-image"></i>
+                </div>
 
-              <span class="qala-preview-category">
-                {{ form.category || 'Категория' }}
-              </span>
+                <strong>Добавить обложку</strong>
+                <span>PNG, JPG или WEBP</span>
+              </div>
+            </label>
+          </section>
+
+          <section class="qala-form-section">
+            <div class="qala-form-group">
+              <label>Название события</label>
+
+              <input
+                v-model="form.title"
+                type="text"
+                class="qala-input"
+                placeholder="Например: Frontend Meetup Karaganda"
+                required
+              />
             </div>
 
-            <div class="qala-preview-body">
-              <div class="qala-preview-date">
-                <span>{{ previewDay }}</span>
-                <small>{{ previewMonth }}</small>
+            <div class="qala-form-group">
+              <label>Категория</label>
+
+              <div class="qala-category-grid">
+                <button
+                  v-for="category in categories"
+                  :key="category"
+                  type="button"
+                  class="qala-category-btn"
+                  :class="{ active: form.category === category }"
+                  @click="form.category = category"
+                >
+                  {{ category }}
+                </button>
+              </div>
+            </div>
+
+            <div class="qala-form-row">
+              <div class="qala-form-group">
+                <label>Дата</label>
+
+                <input
+                  v-model="form.date"
+                  type="date"
+                  class="qala-input"
+                  required
+                />
               </div>
 
-              <div class="qala-preview-content">
-                <h3>
-                  {{ form.title || 'Название события' }}
-                </h3>
+              <div class="qala-form-group">
+                <label>Время</label>
 
-                <p>
-                  <i class="bi bi-geo-alt"></i>
-                  {{ form.location || 'Место проведения' }}
-                </p>
+                <input
+                  v-model="form.time"
+                  type="time"
+                  class="qala-input"
+                  required
+                />
+              </div>
+            </div>
 
-                <div class="qala-preview-meta">
-                  <span>
-                    <i class="bi bi-clock"></i>
-                    {{ form.time || '00:00' }}
-                  </span>
+            <div class="qala-form-group">
+              <label>Место проведения</label>
 
-                  <span>
-                    <i class="bi bi-ticket-perforated"></i>
-                    {{ form.price || 'Бесплатно' }}
-                  </span>
+              <input
+                v-model="form.location"
+                type="text"
+                class="qala-input"
+                placeholder="Например: IT Hub Karaganda"
+                required
+              />
+            </div>
+
+            <div class="qala-form-group">
+              <label>Адрес</label>
+
+              <input
+                v-model="form.address"
+                type="text"
+                class="qala-input"
+                placeholder="Караганда, проспект Бухар-Жырау 32"
+              />
+            </div>
+
+            <div class="qala-form-group">
+              <label>Описание</label>
+
+              <textarea
+                v-model="form.description"
+                class="qala-textarea"
+                rows="5"
+                placeholder="Расскажи, что будет на событии, кому оно подходит и почему стоит прийти"
+                required
+              ></textarea>
+            </div>
+
+            <div class="qala-form-row">
+              <div class="qala-form-group">
+                <label>Стоимость</label>
+
+                <input
+                  v-model="form.price"
+                  type="text"
+                  class="qala-input"
+                  placeholder="Бесплатно / от 3000 ₸"
+                />
+              </div>
+
+              <div class="qala-form-group">
+                <label>Лимит участников</label>
+
+                <input
+                  v-model="form.limit"
+                  type="number"
+                  min="1"
+                  class="qala-input"
+                  placeholder="100"
+                />
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="qala-create-right">
+          <section class="qala-preview-section">
+            <h2>Предпросмотр</h2>
+
+            <article class="qala-preview-card">
+              <div class="qala-preview-image-wrap">
+                <img
+                  v-if="form.image"
+                  :src="form.image"
+                  alt="Preview"
+                  class="qala-preview-image"
+                />
+
+                <div v-else class="qala-preview-empty">
+                  <i class="bi bi-image"></i>
+                </div>
+
+                <span class="qala-preview-category">
+                  {{ form.category || 'Категория' }}
+                </span>
+              </div>
+
+              <div class="qala-preview-body">
+                <div class="qala-preview-date">
+                  <span>{{ previewDay }}</span>
+                  <small>{{ previewMonth }}</small>
+                </div>
+
+                <div class="qala-preview-content">
+                  <h3>
+                    {{ form.title || 'Название события' }}
+                  </h3>
+
+                  <p>
+                    <i class="bi bi-geo-alt"></i>
+                    {{ form.location || 'Место проведения' }}
+                  </p>
+
+                  <div class="qala-preview-meta">
+                    <span>
+                      <i class="bi bi-clock"></i>
+                      {{ form.time || '00:00' }}
+                    </span>
+
+                    <span>
+                      <i class="bi bi-ticket-perforated"></i>
+                      {{ form.price || 'Бесплатно' }}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-        </section>
+            </article>
+          </section>
+        </aside>
 
         <footer class="qala-create-footer">
           <button
@@ -234,6 +242,18 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+    return
+  }
+
+  router.push('/')
+}
 
 const isSubmitted = ref(false)
 
@@ -332,9 +352,9 @@ const submitEvent = () => {
 
 .qala-create-shell {
   width: 100%;
-  max-width: 980px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 28px 20px 56px;
+  padding: 28px 32px 56px;
 }
 
 .qala-create-header {
@@ -381,25 +401,34 @@ const submitEvent = () => {
 
 .qala-create-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 32px;
   align-items: start;
 }
 
+.qala-create-left,
+.qala-create-right,
 .qala-upload-section,
 .qala-form-section,
 .qala-preview-section {
   min-width: 0;
 }
 
-.qala-upload-section {
-  grid-column: 1 / -1;
+.qala-create-left {
+  display: grid;
+  gap: 24px;
+}
+
+.qala-create-right {
+  position: sticky;
+  top: 24px;
+  align-self: start;
 }
 
 .qala-cover-upload {
   position: relative;
   width: 100%;
-  aspect-ratio: 21 / 8;
+  height: 280px;
   border: 1px dashed #dcdcdc;
   border-radius: 28px;
   background: #fafafa;
@@ -536,8 +565,6 @@ const submitEvent = () => {
 }
 
 .qala-preview-section {
-  position: sticky;
-  top: 22px;
   border: 1px solid #eeeeee;
   border-radius: 24px;
   background: #fff;
@@ -732,9 +759,45 @@ const submitEvent = () => {
   color: #22c55e;
 }
 
-@media (max-width: 980px) {
+@media (min-width: 1600px) {
+  .qala-create-shell {
+    max-width: 1640px;
+  }
+
+  .qala-create-card {
+    grid-template-columns: minmax(0, 1fr) 440px;
+  }
+
+  .qala-cover-upload {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1900px) {
+  .qala-create-shell {
+    max-width: 1760px;
+  }
+
+  .qala-create-card {
+    grid-template-columns: minmax(0, 1fr) 460px;
+  }
+
+  .qala-cover-upload {
+    height: 320px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .qala-create-shell {
+    padding: 24px 24px 56px;
+  }
+
   .qala-create-card {
     grid-template-columns: 1fr;
+  }
+
+  .qala-create-right {
+    position: static;
   }
 
   .qala-preview-section {
@@ -743,8 +806,15 @@ const submitEvent = () => {
 }
 
 @media (max-width: 860px) {
+  .qala-create-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   .qala-create-shell {
-    max-width: 460px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 18px 14px 82px;
   }
 
@@ -760,13 +830,34 @@ const submitEvent = () => {
     font-size: 14px;
   }
 
+  .qala-create-card {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .qala-create-left,
+  .qala-create-right,
+  .qala-upload-section,
+  .qala-form-section,
+  .qala-preview-section,
+  .qala-create-footer {
+    width: 100%;
+  }
+
   .qala-cover-upload {
+    width: 100%;
+    height: auto;
     aspect-ratio: 4 / 3;
     border-radius: 22px;
   }
 
   .qala-form-row {
     grid-template-columns: 1fr;
+  }
+
+  .qala-preview-section {
+    position: static;
   }
 
   .qala-create-footer {
@@ -799,6 +890,8 @@ const submitEvent = () => {
 
 @media (max-width: 420px) {
   .qala-create-shell {
+    width: 100%;
+    max-width: none;
     padding-left: 12px;
     padding-right: 12px;
   }

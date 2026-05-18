@@ -2,10 +2,14 @@
   <div class="qala-event-page">
     <div class="qala-event-shell">
       <div class="qala-event-topbar">
-        <RouterLink to="/" class="qala-back-link">
+        <button
+          type="button"
+          class="qala-back-link"
+          @click="goBack"
+        >
           <i class="bi bi-arrow-left"></i>
           <span>Назад</span>
-        </RouterLink>
+        </button>
 
         <button
           type="button"
@@ -251,11 +255,21 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
 
 const isSaved = ref(false)
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+    return
+  }
+
+  router.push('/events')
+}
 
 const events = [
   {
@@ -416,39 +430,39 @@ watch(
 
 .qala-event-shell {
   width: 100%;
-  max-width: 1080px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 22px 20px 56px;
+  padding: 18px 32px 56px;
 }
 
 .qala-event-topbar {
-  height: 54px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
-
+  margin-bottom: 14px;
   position: sticky;
   top: 0;
   z-index: 50;
-
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-
 }
 
 .qala-back-link {
   height: 40px;
-  padding: 0 12px;
+  padding: 0 13px;
+  border: 0;
   border-radius: 999px;
+  background: transparent;
   color: #111;
   display: inline-flex;
   align-items: center;
   gap: 9px;
   text-decoration: none;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 850;
+  cursor: pointer;
 }
 
 .qala-back-link:hover {
@@ -478,7 +492,7 @@ watch(
 .qala-event-hero {
   position: relative;
   width: 100%;
-  aspect-ratio: 21 / 9;
+  height: 440px;
   border-radius: 28px;
   background: #f3f4f6;
   overflow: hidden;
@@ -516,7 +530,7 @@ watch(
 
 .qala-event-content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 32px;
   align-items: start;
 }
@@ -724,7 +738,7 @@ watch(
 
 .qala-event-sidebar {
   position: sticky;
-  top: 20px;
+  top: 74px;
   display: grid;
   gap: 16px;
 }
@@ -938,7 +952,39 @@ watch(
   line-height: 1.5;
 }
 
-@media (max-width: 980px) {
+@media (min-width: 1600px) {
+  .qala-event-shell {
+    max-width: 1640px;
+  }
+
+  .qala-event-hero {
+    height: 460px;
+  }
+
+  .qala-event-content-grid {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+
+@media (min-width: 1900px) {
+  .qala-event-shell {
+    max-width: 1760px;
+  }
+
+  .qala-event-hero {
+    height: 480px;
+  }
+
+  .qala-event-content-grid {
+    grid-template-columns: minmax(0, 1fr) 400px;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1199px) {
+  .qala-event-shell {
+    padding: 16px 24px 56px;
+  }
+
   .qala-event-content-grid {
     grid-template-columns: 1fr;
   }
@@ -947,11 +993,22 @@ watch(
     position: static;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .qala-event-hero {
+    height: 360px;
+  }
 }
 
 @media (max-width: 860px) {
+  .qala-event-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   .qala-event-shell {
-    max-width: 460px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 12px 14px 82px;
   }
 
@@ -963,12 +1020,16 @@ watch(
   }
 
   .qala-event-hero {
+    width: 100%;
+    height: auto;
     border-radius: 22px;
     aspect-ratio: 4 / 3;
     margin-bottom: 20px;
   }
 
   .qala-event-content-grid {
+    width: 100%;
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 
@@ -1002,7 +1063,16 @@ watch(
   }
 
   .qala-event-sidebar {
+    position: static;
+    width: 100%;
     grid-template-columns: 1fr;
+  }
+
+  .qala-info-card,
+  .qala-map-preview,
+  .qala-organizer-card,
+  .qala-related-card {
+    width: 100%;
   }
 
   .qala-organizer-card {
@@ -1021,6 +1091,8 @@ watch(
 
 @media (max-width: 420px) {
   .qala-event-shell {
+    width: 100%;
+    max-width: none;
     padding-left: 12px;
     padding-right: 12px;
   }

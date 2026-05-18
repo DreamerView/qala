@@ -10,18 +10,15 @@
       <RouterView />
     </main>
 
-    <FloatingChat :avatars="chatAvatars" />
   </div>
 </template>
 
 <script setup>
 import InstagramSidebar from '@/components/InstagramSidebar.vue'
-import FloatingChat from '@/components/FloatingChat.vue'
 import QalaMapModal from '@/components/modal/QalaMapModal.vue'
 
 import {
   menu,
-  chatAvatars,
 } from '@/data/instagramData'
 </script>
 

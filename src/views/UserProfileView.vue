@@ -1,42 +1,47 @@
 <template>
   <div class="qala-profile-page">
     <div class="qala-profile-shell">
-      <section class="qala-profile-card">
-        <div class="qala-profile-cover">
-          <div class="qala-profile-cover-glow"></div>
+      <section class="qala-profile-header">
+        <div class="qala-profile-avatar-wrap">
+          <img
+            :src="profile.avatar"
+            :alt="profile.name"
+            class="qala-profile-avatar"
+          />
         </div>
 
-        <div class="qala-profile-main">
-          <div class="qala-profile-avatar-wrap">
-            <img
-              :src="profile.avatar"
-              :alt="profile.name"
-              class="qala-profile-avatar"
-            />
-          </div>
-
-          <div class="qala-profile-info">
-            <div class="qala-profile-head">
-              <div>
-                <h1>{{ profile.name }}</h1>
-
-                <p>
-                  @{{ profile.username }}
-                </p>
-              </div>
-
-              <div class="qala-profile-actions">
-                <button type="button" class="qala-primary-btn">
-                  <i class="bi bi-pencil-square"></i>
-                  <span>Редактировать</span>
-                </button>
-
-                <button type="button" class="qala-icon-btn" aria-label="Настройки">
-                  <i class="bi bi-gear"></i>
-                </button>
-              </div>
+        <div class="qala-profile-content">
+          <div class="qala-profile-top">
+            <div class="qala-profile-title">
+              <h1>{{ profile.name }}</h1>
+              <p>@{{ profile.username }}</p>
             </div>
 
+            <div class="qala-profile-actions">
+              <button type="button" class="qala-edit-btn">
+                <i class="bi bi-pencil-square"></i>
+                <span>Редактировать</span>
+              </button>
+
+              <button type="button" class="qala-icon-btn" aria-label="Настройки">
+                <i class="bi bi-gear"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="qala-profile-stats">
+            <button
+              v-for="stat in stats"
+              :key="stat.label"
+              type="button"
+              class="qala-profile-stat"
+            >
+              <strong>{{ stat.value }}</strong>
+              <span>{{ stat.label }}</span>
+            </button>
+          </div>
+
+          <div class="qala-profile-about">
             <p class="qala-profile-bio">
               {{ profile.bio }}
             </p>
@@ -56,17 +61,6 @@
                 <i class="bi bi-link-45deg"></i>
                 {{ profile.website }}
               </span>
-            </div>
-
-            <div class="qala-profile-stats">
-              <div
-                v-for="stat in stats"
-                :key="stat.label"
-                class="qala-profile-stat"
-              >
-                <strong>{{ stat.value }}</strong>
-                <span>{{ stat.label }}</span>
-              </div>
             </div>
           </div>
         </div>
@@ -100,28 +94,9 @@
               class="qala-profile-event-img"
             />
 
-            <span class="qala-profile-event-badge">
-              {{ event.category }}
-            </span>
-          </div>
-
-          <div class="qala-profile-event-body">
-            <h2>{{ event.title }}</h2>
-
-            <p>
-              <i class="bi bi-geo-alt"></i>
-              {{ event.location }}
-            </p>
-
-            <div class="qala-profile-event-meta">
-              <span>
-                <i class="bi bi-calendar-event"></i>
-                {{ event.date }}
-              </span>
-
-              <span>
-                <i class="bi bi-people"></i>
-                {{ event.people }}
+            <div class="qala-profile-event-overlay">
+              <span class="qala-profile-event-badge">
+                {{ event.category }}
               </span>
             </div>
           </div>
@@ -299,62 +274,39 @@ const emptyState = computed(() => {
 
 .qala-profile-shell {
   width: 100%;
-  max-width: 980px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 28px 20px 56px;
+  padding: 34px 32px 64px;
 }
 
-.qala-profile-card {
-  border: 1px solid #eeeeee;
-  border-radius: 28px;
-  background: #fff;
-  overflow: hidden;
-  margin-bottom: 18px;
-}
-
-.qala-profile-cover {
-  position: relative;
-  height: 190px;
-  background:
-    radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.45), transparent 30%),
-    radial-gradient(circle at 80% 35%, rgba(124, 58, 237, 0.35), transparent 32%),
-    radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.28), transparent 35%),
-    #f3f4f6;
-  overflow: hidden;
-}
-
-.qala-profile-cover-glow {
-  position: absolute;
-  inset: -40%;
-  background:
-    conic-gradient(
-      from 180deg,
-      rgba(56, 189, 248, 0.5),
-      rgba(37, 99, 235, 0.45),
-      rgba(124, 58, 237, 0.45),
-      rgba(6, 182, 212, 0.42),
-      rgba(56, 189, 248, 0.5)
-    );
-  filter: blur(45px);
-  opacity: 0.55;
-}
-
-.qala-profile-main {
+.qala-profile-header {
   display: grid;
-  grid-template-columns: 148px minmax(0, 1fr);
-  gap: 22px;
-  padding: 0 24px 24px;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 42px;
+  align-items: start;
+  padding: 12px 0 38px;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .qala-profile-avatar-wrap {
-  margin-top: -56px;
-  position: relative;
-  z-index: 2;
+  width: 172px;
+  height: 172px;
+  border-radius: 999px;
+  padding: 4px;
+  background:
+    conic-gradient(
+      from 180deg,
+      #38bdf8,
+      #2563eb,
+      #7c3aed,
+      #06b6d4,
+      #38bdf8
+    );
 }
 
 .qala-profile-avatar {
-  width: 132px;
-  height: 132px;
+  width: 100%;
+  height: 100%;
   border: 5px solid #fff;
   border-radius: 999px;
   object-fit: cover;
@@ -362,57 +314,63 @@ const emptyState = computed(() => {
   display: block;
 }
 
-.qala-profile-info {
+.qala-profile-content {
   min-width: 0;
-  padding-top: 20px;
+  padding-top: 8px;
 }
 
-.qala-profile-head {
+.qala-profile-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
+  gap: 24px;
+  margin-bottom: 22px;
 }
 
-.qala-profile-head h1 {
+.qala-profile-title {
+  min-width: 0;
+}
+
+.qala-profile-title h1 {
   margin: 0;
   color: #050505;
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 900;
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.055em;
 }
 
-.qala-profile-head p {
-  margin: 5px 0 0;
+.qala-profile-title p {
+  margin: 7px 0 0;
   color: #737373;
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 750;
 }
 
 .qala-profile-actions {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.qala-primary-btn {
+.qala-edit-btn {
   height: 40px;
-  padding: 0 15px;
+  padding: 0 17px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: #111;
   color: #fff;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 14px;
   font-weight: 850;
+  white-space: nowrap;
 }
 
-.qala-primary-btn:hover {
+.qala-edit-btn:hover {
   background: #222;
 }
 
@@ -420,104 +378,118 @@ const emptyState = computed(() => {
   width: 40px;
   height: 40px;
   border: 1px solid #eeeeee;
-  border-radius: 999px;
+  border-radius: 10px;
   background: #fff;
   color: #111;
   display: grid;
   place-items: center;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 .qala-icon-btn:hover {
   background: #f7f7f7;
 }
 
-.qala-profile-bio {
-  max-width: 620px;
-  margin: 0 0 14px;
+.qala-profile-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  margin-bottom: 22px;
+}
+
+.qala-profile-stat {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.qala-profile-stat strong {
+  color: #111;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.qala-profile-stat span {
   color: #333;
   font-size: 15px;
+  font-weight: 600;
+}
+
+.qala-profile-stat:hover span {
+  color: #111;
+}
+
+.qala-profile-about {
+  max-width: 760px;
+}
+
+.qala-profile-bio {
+  margin: 0 0 13px;
+  color: #111;
+  font-size: 15px;
   line-height: 1.55;
-  font-weight: 500;
+  font-weight: 550;
 }
 
 .qala-profile-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 18px;
-  color: #707070;
-  font-size: 13px;
-  font-weight: 650;
+  color: #737373;
 }
 
 .qala-profile-meta span {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-}
-
-.qala-profile-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.qala-profile-stat {
-  min-width: 110px;
-  padding: 12px 14px;
-  border: 1px solid #eeeeee;
-  border-radius: 18px;
-  background: #fafafa;
-}
-
-.qala-profile-stat strong {
-  display: block;
-  color: #111;
-  font-size: 20px;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.qala-profile-stat span {
-  display: block;
-  margin-top: 6px;
   color: #737373;
-  font-size: 12px;
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.qala-profile-meta i {
+  font-size: 14px;
 }
 
 .qala-profile-tabs {
-  height: 54px;
+  height: 60px;
   border-bottom: 1px solid #eeeeee;
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 22px;
+  gap: 42px;
+  margin-bottom: 26px;
 }
 
 .qala-profile-tab {
   position: relative;
-  height: 54px;
-  padding: 0 18px;
+  height: 60px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: #737373;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 7px;
+  font-size: 13px;
   font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .qala-profile-tab::after {
   content: "";
   position: absolute;
-  left: 14px;
-  right: 14px;
+  left: 0;
+  right: 0;
   bottom: -1px;
-  height: 2px;
-  border-radius: 999px;
+  height: 1px;
   background: transparent;
 }
 
@@ -531,28 +503,20 @@ const emptyState = computed(() => {
 
 .qala-profile-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .qala-profile-event {
+  position: relative;
   min-width: 0;
-  border: 1px solid #eeeeee;
-  border-radius: 20px;
-  background: #fff;
+  background: #f3f4f6;
   color: inherit;
   text-decoration: none;
   overflow: hidden;
-  transition:
-    transform 0.16s ease,
-    box-shadow 0.16s ease,
-    border-color 0.16s ease;
 }
 
 .qala-profile-event:hover {
-  transform: translateY(-2px);
-  border-color: #e4e4e4;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.07);
   color: inherit;
 }
 
@@ -568,14 +532,35 @@ const emptyState = computed(() => {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.22s ease;
+}
+
+.qala-profile-event:hover .qala-profile-event-img {
+  transform: scale(1.04);
+}
+
+.qala-profile-event-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 14px;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    rgba(0, 0, 0, 0.45)
+  );
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.qala-profile-event:hover .qala-profile-event-overlay {
+  opacity: 1;
 }
 
 .qala-profile-event-badge {
-  position: absolute;
-  left: 11px;
-  bottom: 11px;
-  height: 28px;
-  padding: 0 10px;
+  height: 29px;
+  padding: 0 11px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
   color: #111;
@@ -586,59 +571,21 @@ const emptyState = computed(() => {
   backdrop-filter: blur(10px);
 }
 
-.qala-profile-event-body {
-  padding: 13px;
-}
-
-.qala-profile-event-body h2 {
-  margin: 0 0 7px;
-  color: #111;
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.25;
-  letter-spacing: -0.025em;
-}
-
-.qala-profile-event-body p {
-  margin: 0 0 10px;
-  color: #707070;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.qala-profile-event-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  color: #555;
-  font-size: 12px;
-  font-weight: 750;
-}
-
-.qala-profile-event-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .qala-profile-empty {
-  min-height: 330px;
+  min-height: 360px;
   border: 1px dashed #e5e5e5;
-  border-radius: 24px;
+  border-radius: 26px;
   background: #fafafa;
   display: grid;
   place-items: center;
   align-content: center;
   text-align: center;
-  padding: 36px 20px;
+  padding: 40px 20px;
 }
 
 .qala-profile-empty-icon {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   margin-bottom: 15px;
   border-radius: 999px;
   background: #fff;
@@ -657,7 +604,7 @@ const emptyState = computed(() => {
 }
 
 .qala-profile-empty p {
-  max-width: 330px;
+  max-width: 360px;
   margin: 0 auto 18px;
   color: #777;
   font-size: 14px;
@@ -682,73 +629,165 @@ const emptyState = computed(() => {
   color: #fff;
 }
 
+@media (min-width: 1600px) {
+  .qala-profile-shell {
+    max-width: 1640px;
+  }
+
+  .qala-profile-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1900px) {
+  .qala-profile-shell {
+    max-width: 1760px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .qala-profile-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* MOBILE */
 @media (max-width: 860px) {
   .qala-profile-shell {
-    max-width: 460px;
-    padding: 14px 14px 82px;
+    width: 100%;
+    max-width: none;
+    padding: 16px 0 82px;
   }
 
-  .qala-profile-card {
-    border-radius: 24px;
-  }
-
-  .qala-profile-cover {
-    height: 140px;
-  }
-
-  .qala-profile-main {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 0 16px 18px;
+  .qala-profile-header {
+    display: block;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid #eeeeee;
   }
 
   .qala-profile-avatar-wrap {
-    margin-top: -48px;
+    width: 92px;
+    height: 92px;
+    padding: 3px;
+    float: left;
+    margin: 0 18px 10px 0;
   }
 
   .qala-profile-avatar {
-    width: 104px;
-    height: 104px;
     border-width: 4px;
   }
 
-  .qala-profile-info {
-    padding-top: 0;
+  .qala-profile-content {
+    min-width: 0;
+    padding-top: 2px;
   }
 
-  .qala-profile-head {
+  .qala-profile-top {
     display: block;
+    margin-bottom: 14px;
   }
 
-  .qala-profile-head h1 {
-    font-size: 25px;
+  .qala-profile-title h1 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+
+  .qala-profile-title p {
+    margin: 5px 0 0;
+    color: #737373;
+    font-size: 13px;
+    font-weight: 750;
   }
 
   .qala-profile-actions {
-    margin-top: 14px;
+    clear: both;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    gap: 8px;
+    margin-top: 16px;
   }
 
-  .qala-primary-btn {
-    flex: 1;
+  .qala-edit-btn {
+    width: 100%;
+    height: 40px;
     justify-content: center;
+    border-radius: 10px;
+  }
+
+  .qala-icon-btn {
+    width: 42px;
+    height: 40px;
+    border-radius: 10px;
   }
 
   .qala-profile-stats {
+    clear: both;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 18px 0 18px;
+    padding: 14px 0;
+    border-top: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
   }
 
   .qala-profile-stat {
-    min-width: 0;
-    padding: 11px 10px;
-    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .qala-profile-stat strong {
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .qala-profile-stat span {
+    color: #555;
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .qala-profile-about {
+    clear: both;
+    max-width: none;
+  }
+
+  .qala-profile-bio {
+    margin: 0 0 12px;
+    color: #111;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 550;
+  }
+
+  .qala-profile-meta {
+    display: grid;
+    gap: 8px;
+    color: #737373;
+  }
+
+  .qala-profile-meta span {
+    font-size: 13px;
+    font-weight: 700;
   }
 
   .qala-profile-tabs {
+    height: 54px;
     justify-content: flex-start;
+    gap: 28px;
     overflow-x: auto;
     scrollbar-width: none;
+    padding: 0 20px;
+    margin-bottom: 4px;
   }
 
   .qala-profile-tabs::-webkit-scrollbar {
@@ -756,57 +795,60 @@ const emptyState = computed(() => {
   }
 
   .qala-profile-tab {
+    height: 54px;
     flex: 0 0 auto;
-    padding: 0 14px;
+    font-size: 12px;
   }
 
   .qala-profile-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
   }
 
-  .qala-profile-event {
-    display: grid;
-    grid-template-columns: 118px minmax(0, 1fr);
+  .qala-profile-event-overlay {
+    display: none;
   }
 
-  .qala-profile-event-img-wrap {
-    aspect-ratio: auto;
-    height: 100%;
-    min-height: 118px;
-  }
-
-  .qala-profile-event:hover {
+  .qala-profile-event:hover .qala-profile-event-img {
     transform: none;
-    box-shadow: none;
   }
 }
 
 @media (max-width: 420px) {
-  .qala-profile-shell {
-    padding-left: 12px;
-    padding-right: 12px;
+  .qala-profile-header {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  .qala-profile-meta {
-    display: grid;
-    gap: 8px;
+  .qala-profile-avatar-wrap {
+    width: 78px;
+    height: 78px;
+    margin-right: 14px;
   }
 
-  .qala-profile-event {
-    grid-template-columns: 104px minmax(0, 1fr);
+  .qala-profile-title h1 {
+    font-size: 20px;
   }
 
-  .qala-profile-event-img-wrap {
-    min-height: 112px;
+  .qala-profile-title p {
+    font-size: 12px;
   }
 
-  .qala-profile-event-body {
-    padding: 11px;
+  .qala-profile-actions {
+    grid-template-columns: 1fr 40px;
   }
 
-  .qala-profile-event-body h2 {
-    font-size: 14px;
+  .qala-edit-btn,
+  .qala-icon-btn {
+    height: 38px;
+  }
+
+  .qala-icon-btn {
+    width: 40px;
+  }
+
+  .qala-profile-stats {
+    margin-top: 16px;
   }
 }
 </style>

@@ -82,14 +82,17 @@ const routes = [
       title: 'Профиль пользователя',
     },
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    redirect: '/',
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 
-  // Отключаем стандартное поведение Vue Router,
-  // чтобы не было плавного scroll-to-top
   scrollBehavior() {
     return false
   },
@@ -98,11 +101,13 @@ const router = createRouter({
 router.afterEach((to) => {
   document.title = to.meta.title ? `${to.meta.title} — Qala` : 'Qala'
 
-  // Жёстко поднимаем страницу наверх без анимации
   requestAnimationFrame(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto',
+    })
 
-    // На случай если скроллится не window, а html/body
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
   })

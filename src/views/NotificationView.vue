@@ -274,7 +274,9 @@ const notifications = ref([
 const tabs = computed(() => {
   const unreadCount = notifications.value.filter((item) => !item.read).length
   const inviteCount = notifications.value.filter((item) => item.type === 'invite').length
-  const eventCount = notifications.value.filter((item) => item.type === 'event' || item.type === 'reminder').length
+  const eventCount = notifications.value.filter((item) => {
+    return item.type === 'event' || item.type === 'reminder'
+  }).length
 
   return [
     {
@@ -380,9 +382,9 @@ const handleAction = (item, action) => {
 
 .qala-notifications-shell {
   width: 100%;
-  max-width: 820px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 28px 20px 56px;
+  padding: 28px 32px 56px;
 }
 
 .qala-notifications-header {
@@ -481,8 +483,13 @@ const handleAction = (item, action) => {
 }
 
 .qala-notification-list {
+  width: 100%;
   display: grid;
   gap: 24px;
+}
+
+.qala-notification-group {
+  width: 100%;
 }
 
 .qala-notification-group h2 {
@@ -494,19 +501,21 @@ const handleAction = (item, action) => {
 }
 
 .qala-notification-items {
+  width: 100%;
   display: grid;
   gap: 8px;
 }
 
 .qala-notification-item {
   position: relative;
+  width: 100%;
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) 72px 26px;
-  gap: 13px;
+  grid-template-columns: 58px minmax(0, 1fr) 132px 28px;
+  gap: 15px;
   align-items: center;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid transparent;
-  border-radius: 20px;
+  border-radius: 22px;
   background: #fff;
 }
 
@@ -533,15 +542,15 @@ const handleAction = (item, action) => {
 
 .qala-notification-avatar-wrap {
   position: relative;
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   color: inherit;
   text-decoration: none;
 }
 
 .qala-notification-avatar {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   border-radius: 999px;
   object-fit: cover;
   background: #f3f4f6;
@@ -570,8 +579,8 @@ const handleAction = (item, action) => {
 .qala-notification-text {
   color: #111;
   text-decoration: none;
-  font-size: 14px;
-  line-height: 1.42;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .qala-notification-text:hover {
@@ -630,9 +639,9 @@ const handleAction = (item, action) => {
 }
 
 .qala-notification-preview {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
+  width: 132px;
+  height: 86px;
+  border-radius: 18px;
   overflow: hidden;
   background: #f3f4f6;
   color: inherit;
@@ -647,8 +656,8 @@ const handleAction = (item, action) => {
 }
 
 .qala-notification-more {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border: 0;
   background: transparent;
   color: #2563eb;
@@ -720,9 +729,91 @@ const handleAction = (item, action) => {
   color: #fff;
 }
 
-@media (max-width: 860px) {
+/* LARGE DESKTOP / 4K */
+@media (min-width: 1800px) {
   .qala-notifications-shell {
-    max-width: 460px;
+    max-width: 1640px;
+  }
+
+  .qala-notification-item {
+    grid-template-columns: 62px minmax(0, 1fr) 150px 30px;
+  }
+
+  .qala-notification-avatar-wrap,
+  .qala-notification-avatar {
+    width: 62px;
+    height: 62px;
+  }
+
+  .qala-notification-preview {
+    width: 150px;
+    height: 94px;
+  }
+}
+
+/* ULTRA WIDE / 8K */
+@media (min-width: 2400px) {
+  .qala-notifications-shell {
+    max-width: 1760px;
+  }
+
+  .qala-notification-item {
+    grid-template-columns: 64px minmax(0, 1fr) 168px 30px;
+  }
+
+  .qala-notification-avatar-wrap,
+  .qala-notification-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .qala-notification-preview {
+    width: 168px;
+    height: 104px;
+  }
+}
+
+/* TABLET */
+@media (min-width: 861px) and (max-width: 1199px) {
+  .qala-notifications-shell {
+    padding: 24px 24px 56px;
+  }
+
+  .qala-notification-item {
+    grid-template-columns: 54px minmax(0, 1fr) 96px 26px;
+    gap: 13px;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .qala-notification-avatar-wrap,
+  .qala-notification-avatar {
+    width: 54px;
+    height: 54px;
+  }
+
+  .qala-notification-preview {
+    width: 96px;
+    height: 72px;
+    border-radius: 16px;
+  }
+
+  .qala-notification-text {
+    font-size: 14px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 860px) {
+  .qala-notifications-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .qala-notifications-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 18px 14px 82px;
   }
 
@@ -749,7 +840,14 @@ const handleAction = (item, action) => {
     display: none;
   }
 
+  .qala-notification-list,
+  .qala-notification-group,
+  .qala-notification-items {
+    width: 100%;
+  }
+
   .qala-notification-item {
+    width: 100%;
     grid-template-columns: 50px minmax(0, 1fr) 58px;
     gap: 11px;
     padding: 10px;
@@ -791,6 +889,8 @@ const handleAction = (item, action) => {
 
 @media (max-width: 420px) {
   .qala-notifications-shell {
+    width: 100%;
+    max-width: none;
     padding-left: 12px;
     padding-right: 12px;
   }

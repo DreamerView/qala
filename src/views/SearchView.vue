@@ -175,7 +175,8 @@ const events = ref([
     location: 'Караганда, Центральный парк',
     date: '25 мая',
     people: '1.2K',
-    image: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 2,
@@ -184,7 +185,8 @@ const events = ref([
     location: 'IT Hub Karaganda',
     date: '28 мая',
     people: '430',
-    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 3,
@@ -193,7 +195,8 @@ const events = ref([
     location: 'Набережная',
     date: '1 июня',
     people: '860',
-    image: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 4,
@@ -202,7 +205,8 @@ const events = ref([
     location: 'Qala Business Center',
     date: '4 июня',
     people: '250',
-    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 5,
@@ -211,7 +215,8 @@ const events = ref([
     location: 'Галерея современного искусства',
     date: '7 июня',
     people: '640',
-    image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 6,
@@ -220,7 +225,8 @@ const events = ref([
     location: 'Creative Space',
     date: '10 июня',
     people: '310',
-    image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop',
   },
 ])
 
@@ -255,9 +261,9 @@ const clearSearch = () => {
 
 .ig-search-shell {
   width: 100%;
-  max-width: 920px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 28px 20px 48px;
+  padding: 28px 32px 48px;
 }
 
 .ig-search-header {
@@ -434,7 +440,7 @@ const clearSearch = () => {
 
 .ig-results-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 18px;
 }
 
@@ -565,9 +571,35 @@ const clearSearch = () => {
   line-height: 1.45;
 }
 
+/* LARGE DESKTOP / 4K */
+@media (min-width: 1800px) {
+  .ig-search-shell {
+    max-width: 1640px;
+  }
+}
+
+/* ULTRA WIDE / 8K */
+@media (min-width: 2400px) {
+  .ig-search-shell {
+    max-width: 1760px;
+  }
+}
+
+/* TABLET */
+@media (min-width: 861px) and (max-width: 1199px) {
+  .ig-search-shell {
+    padding: 24px 24px 48px;
+  }
+
+  .ig-results-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* MOBILE */
 @media (max-width: 860px) {
   .ig-search-shell {
-    max-width: 460px;
+    max-width: none;
     padding: 18px 14px 82px;
   }
 
