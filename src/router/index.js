@@ -8,14 +8,26 @@ import UserProfileView from '@/views/UserProfileView.vue'
 import PlusView from '@/views/PlusView.vue'
 import NotificationView from '@/views/NotificationView.vue'
 import PublicProfileView from '@/views/PublicProfileView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 
 const routes = [
+  {
+    path: '/sign',
+    name: 'sign',
+    component: SignUpView,
+    meta: {
+      title: 'Регистрация',
+      layout: 'auth',
+    },
+  },
+
   {
     path: '/',
     name: 'home',
     component: EventsView,
     meta: {
       title: 'Главная',
+      layout: 'app',
     },
   },
   {
@@ -24,6 +36,7 @@ const routes = [
     component: SearchView,
     meta: {
       title: 'Поиск',
+      layout: 'app',
     },
   },
   {
@@ -32,6 +45,7 @@ const routes = [
     component: EventsView,
     meta: {
       title: 'События',
+      layout: 'app',
     },
   },
   {
@@ -40,6 +54,7 @@ const routes = [
     component: EventView,
     meta: {
       title: 'Событие',
+      layout: 'app',
     },
   },
   {
@@ -48,6 +63,7 @@ const routes = [
     component: MapView,
     meta: {
       title: 'Карта',
+      layout: 'app',
     },
   },
   {
@@ -56,6 +72,7 @@ const routes = [
     component: UserProfileView,
     meta: {
       title: 'Профиль',
+      layout: 'app',
     },
   },
   {
@@ -64,6 +81,7 @@ const routes = [
     component: PlusView,
     meta: {
       title: 'Создать',
+      layout: 'app',
     },
   },
   {
@@ -72,6 +90,7 @@ const routes = [
     component: NotificationView,
     meta: {
       title: 'Уведомления',
+      layout: 'app',
     },
   },
   {
@@ -80,8 +99,10 @@ const routes = [
     component: PublicProfileView,
     meta: {
       title: 'Профиль пользователя',
+      layout: 'app',
     },
   },
+
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
@@ -94,7 +115,11 @@ const router = createRouter({
   routes,
 
   scrollBehavior() {
-    return false
+    return {
+      top: 0,
+      left: 0,
+      behavior: 'auto',
+    }
   },
 })
 

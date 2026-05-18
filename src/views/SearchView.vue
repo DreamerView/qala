@@ -1,5 +1,5 @@
 <template>
-  <div class="ig-search-page">
+  <main class="ig-search-page">
     <div class="ig-search-shell">
       <header class="ig-search-header">
         <HeaderBlock title="Поиск" />
@@ -11,17 +11,18 @@
         />
       </header>
 
-      <CategoryList 
+      <CategoryList
         v-model="activeCategory"
-        :categories="categories"
+        :categories="SEARCH_CATEGORIES"
       />
 
-      <section v-if="!searchQuery" class="ig-recent-section">
+      <section v-if="isRecentVisible" class="ig-search-section">
         <SectionHeader title="Недавние">
           <template #right>
             <button
               type="button"
               class="ig-clear-btn"
+              :disabled="!recentSearches.length"
               @click="clearRecentSearches"
             >
               Очистить всё
@@ -34,10 +35,17 @@
           :items="recentSearches"
           @select="selectRecentSearch"
         />
+
+        <EmptyState
+          v-else
+          icon="bi bi-clock-history"
+          title="История поиска пуста"
+          text="Когда ты начнёшь искать события, они появятся здесь."
+        />
       </section>
 
-      <section class="ig-results-section">
-        <SectionHeader :title="searchQuery ? 'Результаты' : 'Популярное рядом'">
+      <section class="ig-search-section">
+        <SectionHeader :title="resultsTitle">
           <template #right>
             <span class="ig-results-count">
               {{ filteredEvents.length }} найдено
@@ -45,8 +53,8 @@
           </template>
         </SectionHeader>
 
-        <div v-if="filteredEvents.length" class="ig-results-grid">
-          <Card 
+        <div v-if="hasResults" class="ig-results-grid">
+          <Card
             v-for="event in filteredEvents"
             :key="event.id"
             :event="event"
@@ -56,160 +64,68 @@
         <EmptyState
           v-else
           icon="bi bi-search"
-          title="История поиска пуста"
-          text="Когда ты начнёшь искать события, они появятся здесь."
+          :title="emptyState.title"
+          :text="emptyState.text"
         />
       </section>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
+import Card from '@/components/global/Card.vue'
+import EmptyState from '@/components/global/EmptyState.vue'
+import HeaderBlock from '@/components/global/HeaderBlock.vue'
+import CategoryList from '@/components/global/CategoryList.vue'
 import SearchBox from '@/components/search/SearchBox.vue'
 import SectionHeader from '@/components/search/SectionHeader.vue'
-import EmptyState from '@/components/global/EmptyState.vue'
 import RecentSearchList from '@/components/search/RecentSearchList.vue'
-import Card from '../components/global/Card.vue'
-import CategoryList from '../components/global/CategoryList.vue'
-import HeaderBlock from '../components/global/HeaderBlock.vue'
 
-const searchQuery = ref('')
-const activeCategory = ref('Все')
+import { SEARCH_CATEGORIES } from '@/data/searchCategories'
+import { MOCK_EVENTS } from '@/data/mockEvents'
+import { useEventSearch } from '@/composables/useEventSearch'
 
-const categories = [
-  'Все',
-  'Концерты',
-  'Образование',
-  'Спорт',
-  'Бизнес',
-  'Выставки',
-  'Бесплатно',
-]
-
-const recentSearches = ref([
-  'Концерт в Караганде',
-  'IT meetup',
-  'Выставка',
-  'Бесплатные события',
-])
-
-const events = ref([
-  {
-    id: 1,
-    title: 'Музыкальный вечер Qala Live',
-    category: 'Концерты',
-    location: 'Караганда, Центральный парк',
-    day: '25',
-    month: 'МАЙ',
-    time: '19:00',
-    people: '1.2K',
-    popularity: 1200,
-    order: 3,
-    image:
-      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    id: 2,
-    title: 'Frontend Meetup Karaganda',
-    category: 'Образование',
-    location: 'IT Hub Karaganda',
-    day: '28',
-    month: 'МАЙ',
-    time: '18:30',
-    people: '430',
-    popularity: 430,
-    order: 4,
-    image:
-      'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    id: 3,
-    title: 'Городской забег',
-    category: 'Спорт',
-    location: 'Набережная',
-    day: '01',
-    month: 'ИЮН',
-    time: '08:00',
-    people: '860',
-    popularity: 860,
-    order: 5,
-    image:
-      'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    id: 4,
-    title: 'Startup Talks',
-    category: 'Бизнес',
-    location: 'Qala Business Center',
-    day: '04',
-    month: 'ИЮН',
-    time: '17:00',
-    people: '250',
-    popularity: 250,
-    order: 6,
-    image:
-      'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    id: 5,
-    title: 'Арт-выставка молодых художников',
-    category: 'Выставки',
-    location: 'Галерея современного искусства',
-    day: '07',
-    month: 'ИЮН',
-    time: '12:00',
-    people: '640',
-    popularity: 640,
-    order: 7,
-    image:
-      'https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop',
-  },
-  {
-    id: 6,
-    title: 'Бесплатный мастер-класс по дизайну',
-    category: 'Бесплатно',
-    location: 'Creative Space',
-    day: '10',
-    month: 'ИЮН',
-    time: '15:00',
-    people: '310',
-    popularity: 310,
-    order: 8,
-    image:
-      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop',
-  },
-])
-
-const filteredEvents = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase()
-
-  return events.value.filter((event) => {
-    const matchesCategory =
-      activeCategory.value === 'Все' || event.category === activeCategory.value
-
-    const matchesQuery =
-      !query ||
-      event.title.toLowerCase().includes(query) ||
-      event.category.toLowerCase().includes(query) ||
-      event.location.toLowerCase().includes(query)
-
-    return matchesCategory && matchesQuery
-  })
+const {
+  searchQuery,
+  activeCategory,
+  recentSearches,
+  filteredEvents,
+  clearSearch,
+  clearRecentSearches,
+  selectRecentSearch,
+} = useEventSearch({
+  events: MOCK_EVENTS,
+  defaultCategory: SEARCH_CATEGORIES[0],
+  initialRecentSearches: [
+    'Концерт в Караганде',
+    'IT meetup',
+    'Выставка',
+    'Бесплатные события',
+  ],
 })
 
-const clearSearch = () => {
-  searchQuery.value = ''
-}
+const hasResults = computed(() => filteredEvents.value.length > 0)
+const isRecentVisible = computed(() => !searchQuery.value.trim())
 
-const clearRecentSearches = () => {
-  recentSearches.value = []
-}
+const resultsTitle = computed(() =>
+  searchQuery.value.trim() ? 'Результаты' : 'Популярное рядом',
+)
 
-const selectRecentSearch = (item) => {
-  searchQuery.value = item
-}
+const emptyState = computed(() => {
+  if (searchQuery.value.trim()) {
+    return {
+      title: 'Ничего не найдено',
+      text: 'Попробуй изменить запрос или выбрать другую категорию.',
+    }
+  }
+
+  return {
+    title: 'События не найдены',
+    text: 'Попробуй выбрать другую категорию.',
+  }
+})
 </script>
 
 <style scoped>
@@ -222,7 +138,7 @@ const selectRecentSearch = (item) => {
 .ig-search-shell {
   width: 100%;
   max-width: 1480px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 28px 32px 48px;
 }
 
@@ -230,31 +146,41 @@ const selectRecentSearch = (item) => {
   margin-bottom: 18px;
 }
 
-.ig-search-title {
-  margin: 0 0 18px;
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: #050505;
-}
-
-.ig-recent-section {
+.ig-search-section {
   margin-bottom: 30px;
 }
 
+.ig-search-section:last-child {
+  margin-bottom: 0;
+}
+
 .ig-clear-btn {
+  padding: 0;
   border: 0;
   background: transparent;
-  padding: 0;
   color: #2563eb;
   font-size: 14px;
   font-weight: 700;
+  line-height: 1;
+  transition:
+    color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.ig-clear-btn:hover:not(:disabled) {
+  color: #1d4ed8;
+}
+
+.ig-clear-btn:disabled {
+  cursor: default;
+  opacity: 0.45;
 }
 
 .ig-results-count {
   color: #8e8e8e;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .ig-results-grid {
@@ -295,11 +221,6 @@ const selectRecentSearch = (item) => {
     padding: 18px 14px 82px;
   }
 
-  .ig-search-title {
-    font-size: 24px;
-    margin-bottom: 14px;
-  }
-
   .ig-results-grid {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -308,12 +229,7 @@ const selectRecentSearch = (item) => {
 
 @media (max-width: 420px) {
   .ig-search-shell {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
-  .ig-results-count {
-    white-space: nowrap;
+    padding-inline: 12px;
   }
 }
 </style>

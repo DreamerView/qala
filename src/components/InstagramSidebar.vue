@@ -1,36 +1,36 @@
 <template>
-  <!-- DESKTOP / TABLET SIDEBAR -->
-  <aside class="ig-sidebar">
+  <aside class="ig-sidebar" aria-label="Главное меню">
     <div class="ig-sidebar-inner">
-      <div class="ig-sidebar-top">
+      <div class="ig-sidebar-content">
         <RouterLink to="/" class="ig-logo" aria-label="Qala">
           <SvgIcon name="instagram" :size="28" />
         </RouterLink>
 
-        <div class="ig-sidebar-body">
-          <nav class="ig-menu">
-            <RouterLink
-              v-for="item in menu"
-              :key="item.title"
-              :to="item.to || '/'"
-              class="ig-menu-item"
-              :class="{ active: isActiveRoute(item) }"
-            >
-              <span class="ig-menu-icon">
-                <SvgIcon :name="getMenuIcon(item)" :size="24" />
+        <nav class="ig-sidebar-scroll" aria-label="Навигация">
+          <RouterLink
+            v-for="item in normalizedMenu"
+            :key="item.key"
+            :to="item.to"
+            class="ig-menu-item"
+            :class="{ active: item.isActive }"
+            :aria-current="item.isActive ? 'page' : undefined"
+          >
+            <span class="ig-menu-icon">
+              <SvgIcon :name="item.currentIcon" :size="24" />
 
-                <span v-if="item.badge" class="ig-menu-badge">
-                  {{ item.badge }}
-                </span>
+              <span v-if="item.badge" class="ig-badge">
+                {{ item.badge }}
               </span>
+            </span>
 
-              <span class="ig-menu-text">{{ item.title }}</span>
-            </RouterLink>
-          </nav>
-        </div>
+            <span class="ig-menu-text">
+              {{ item.title }}
+            </span>
+          </RouterLink>
+        </nav>
       </div>
 
-      <div class="ig-bottom-menu">
+      <div class="ig-sidebar-actions">
         <button class="ig-menu-item" type="button">
           <span class="ig-menu-icon">
             <SvgIcon name="menu" :size="24" />
@@ -52,17 +52,17 @@
     </div>
   </aside>
 
-  <!-- MOBILE BOTTOM NAV -->
-  <nav class="ig-mobile-nav">
+  <nav class="ig-mobile-nav" aria-label="Мобильная навигация">
     <RouterLink
       v-for="item in mobileMenu"
-      :key="item.title"
-      :to="item.to || '/'"
-      class="ig-mobile-nav-item"
-      :class="{ active: isActiveRoute(item) }"
+      :key="item.key"
+      :to="item.to"
+      class="ig-mobile-item"
+      :class="{ active: item.isActive }"
       :aria-label="item.title"
+      :aria-current="item.isActive ? 'page' : undefined"
     >
-      <SvgIcon :name="getMenuIcon(item)" :size="30" />
+      <SvgIcon :name="item.currentIcon" :size="30" />
 
       <span v-if="item.badge" class="ig-mobile-badge">
         {{ item.badge }}
@@ -76,59 +76,86 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SvgIcon from './SvgIcon.vue'
 
+const MOBILE_ICON_ORDER = [
+  'home',
+  'search',
+  'plus',
+  'heart',
+  'user-circle',
+]
+
 const route = useRoute()
 
 const props = defineProps({
   menu: {
     type: Array,
     required: true,
+    default: () => [],
   },
 })
 
-const isActiveRoute = (item) => {
-  if (!item.to) {
-    return false
-  }
+const isActivePath = (item) => {
+  if (!item.to) return false
+
+  const currentPath = normalizePath(route.path)
+  const targetPath = normalizePath(item.to)
 
   if (item.exact) {
-    return route.path === item.to
+    return currentPath === targetPath
   }
 
-  return route.path === item.to || route.path.startsWith(`${item.to}/`)
+  return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`)
 }
 
-const getMenuIcon = (item) => {
-  if (isActiveRoute(item) && item.activeIcon) {
-    return item.activeIcon
-  }
+const normalizePath = (path) => {
+  if (!path || path === '/') return '/'
 
-  return item.icon
+  return String(path).replace(/\/+$/, '')
 }
+
+const normalizedMenu = computed(() => {
+  return props.menu
+    .filter((item) => item?.title && item?.icon)
+    .map((item) => {
+      const isActive = isActivePath(item)
+
+      return {
+        ...item,
+        to: item.to || '/',
+        key: item.key || item.name || item.title,
+        isActive,
+        currentIcon: isActive && item.activeIcon ? item.activeIcon : item.icon,
+      }
+    })
+})
 
 const mobileMenu = computed(() => {
-  const order = [
-    'home',
-    'search',
-    'plus',
-    'heart',
-    'user-circle',
-  ]
-
-  return order
-    .map((icon) => props.menu.find((item) => item.icon === icon))
+  return MOBILE_ICON_ORDER
+    .map((icon) => normalizedMenu.value.find((item) => item.icon === icon))
     .filter(Boolean)
 })
 </script>
 
 <style scoped>
-/* DESKTOP SIDEBAR */
-
 .ig-sidebar {
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 72px;
+  --sidebar-padding-x: 13px;
+  --sidebar-padding-top: 26px;
+  --sidebar-padding-bottom: 22px;
+  --item-height: 45px;
+  --item-radius: 8px;
+  --item-gap: 15px;
+  --icon-width: 46px;
+  --menu-gap: 16px;
+  --color-text: #111;
+  --color-hover: #f7f7f7;
+  --color-border: #ededed;
+  --color-badge: #ff3040;
+
   position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 220px;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-width);
   background: #fff;
   z-index: 100;
   overflow: hidden;
@@ -136,101 +163,100 @@ const mobileMenu = computed(() => {
 }
 
 .ig-sidebar-inner {
-  width: 220px;
+  width: var(--sidebar-width);
   height: 100%;
-  padding: 26px 13px 22px;
+  min-height: 0;
+  padding: var(--sidebar-padding-top) var(--sidebar-padding-x)
+    var(--sidebar-padding-bottom);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 0;
 }
 
-.ig-sidebar-top {
-  display: flex;
-  flex-direction: column;
+.ig-sidebar-content {
   min-height: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .ig-logo {
-  width: 46px;
-  min-width: 46px;
-  height: 46px;
+  width: var(--icon-width);
+  min-width: var(--icon-width);
+  height: var(--icon-width);
+  margin-bottom: 22px;
   display: grid;
   place-items: center;
-  margin-bottom: 22px;
-  color: #111;
   flex-shrink: 0;
+  color: var(--color-text);
   text-decoration: none;
 }
 
-.ig-sidebar-body {
+.ig-sidebar-scroll {
   min-height: 0;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--menu-gap);
+  overflow: hidden auto;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
-.ig-sidebar:hover .ig-sidebar-body {
+.ig-sidebar:hover .ig-sidebar-scroll {
   scrollbar-color: #cfcfcf transparent;
 }
 
-.ig-sidebar-body::-webkit-scrollbar {
+.ig-sidebar-scroll::-webkit-scrollbar {
   width: 5px;
 }
 
-.ig-sidebar-body::-webkit-scrollbar-track {
+.ig-sidebar-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.ig-sidebar-body::-webkit-scrollbar-thumb {
+.ig-sidebar-scroll::-webkit-scrollbar-thumb {
   background: transparent;
   border-radius: 999px;
 }
 
-.ig-sidebar:hover .ig-sidebar-body::-webkit-scrollbar-thumb {
+.ig-sidebar:hover .ig-sidebar-scroll::-webkit-scrollbar-thumb {
   background: #d1d1d1;
 }
 
-.ig-sidebar-body::-webkit-scrollbar-thumb:hover {
+.ig-sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: #b8b8b8;
 }
 
-.ig-menu,
-.ig-bottom-menu {
+.ig-sidebar-actions {
+  padding-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.ig-bottom-menu {
-  padding-top: 18px;
+  gap: var(--menu-gap);
   flex-shrink: 0;
 }
 
 .ig-menu-item {
   width: 100%;
-  height: 45px;
+  height: var(--item-height);
   padding: 0;
   border: 0;
+  border-radius: var(--item-radius);
   background: transparent;
   color: #000;
-  border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  text-align: left;
+  gap: var(--item-gap);
   font-size: 16px;
   line-height: 1.2;
   white-space: nowrap;
+  text-align: left;
   text-decoration: none;
 }
 
 .ig-menu-item:hover {
-  background: #f7f7f7;
+  background: var(--color-hover);
   color: #000;
 }
 
@@ -239,95 +265,83 @@ const mobileMenu = computed(() => {
 }
 
 .ig-menu-icon {
-  width: 46px;
-  min-width: 46px;
-  height: 45px;
+  position: relative;
+  width: var(--icon-width);
+  min-width: var(--icon-width);
+  height: var(--item-height);
   display: grid;
   place-items: center;
-  position: relative;
-  color: #111;
   flex-shrink: 0;
+  color: var(--color-text);
 }
 
 .ig-menu-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
   transition:
     opacity 0.16s ease,
     transform 0.16s ease;
 }
 
-.ig-menu-badge {
-  position: absolute;
-  right: 4px;
-  top: 4px;
+.ig-badge,
+.ig-mobile-badge {
   min-width: 19px;
   height: 19px;
   padding: 0 6px;
   border-radius: 999px;
-  background: #ff3040;
+  background: var(--color-badge);
   color: #fff;
-  font-size: 11px;
-  font-weight: 700;
   display: grid;
   place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-/* MOBILE BOTTOM NAV */
+.ig-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
 
 .ig-mobile-nav {
   display: none;
 }
 
-/* HEIGHT OPTIMIZATION */
-
 @media (max-height: 760px) {
-  .ig-sidebar-inner {
-    padding-top: 20px;
-    padding-bottom: 18px;
+  .ig-sidebar {
+    --sidebar-padding-top: 20px;
+    --sidebar-padding-bottom: 18px;
+    --menu-gap: 10px;
   }
 
   .ig-logo {
     margin-bottom: 16px;
   }
 
-  .ig-menu,
-  .ig-bottom-menu {
-    gap: 10px;
-  }
-
-  .ig-bottom-menu {
+  .ig-sidebar-actions {
     padding-top: 12px;
   }
 }
 
 @media (max-height: 640px) {
-  .ig-menu,
-  .ig-bottom-menu {
-    gap: 6px;
-  }
-
-  .ig-menu-item {
-    height: 42px;
-  }
-
-  .ig-menu-icon {
-    height: 42px;
+  .ig-sidebar {
+    --item-height: 42px;
+    --menu-gap: 6px;
   }
 }
 
-/* TABLET MODE */
-
 @media (min-width: 861px) and (max-width: 1199px) {
   .ig-sidebar {
-    width: 72px;
+    width: var(--sidebar-collapsed-width);
   }
 
   .ig-sidebar:hover {
-    width: 220px;
+    width: var(--sidebar-width);
   }
 
   .ig-menu-text {
@@ -343,8 +357,6 @@ const mobileMenu = computed(() => {
   }
 }
 
-/* MOBILE MODE */
-
 @media (max-width: 860px) {
   .ig-sidebar {
     display: none;
@@ -355,17 +367,17 @@ const mobileMenu = computed(() => {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 56px;
-    padding: 0;
+    height: calc(56px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
     background: #fff;
     border-top: 0.1px solid #ededed;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     align-items: center;
     z-index: 200;
   }
 
-  .ig-mobile-nav-item {
+  .ig-mobile-item {
     position: relative;
     width: 100%;
     height: 56px;
@@ -378,11 +390,11 @@ const mobileMenu = computed(() => {
     text-decoration: none;
   }
 
-  .ig-mobile-nav-item.active {
+  .ig-mobile-item.active {
     color: #000;
   }
 
-  .ig-mobile-nav-item.active :deep(.svg-icon) {
+  .ig-mobile-item.active :deep(.svg-icon) {
     transform: scale(1.03);
   }
 
@@ -394,13 +406,7 @@ const mobileMenu = computed(() => {
     height: 18px;
     margin-left: 7px;
     padding: 0 5px;
-    border-radius: 999px;
-    background: #ff3040;
-    color: #fff;
     font-size: 10px;
-    font-weight: 700;
-    display: grid;
-    place-items: center;
   }
 }
 </style>
