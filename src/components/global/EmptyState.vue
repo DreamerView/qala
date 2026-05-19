@@ -1,19 +1,19 @@
 <template>
   <section
-    class="empty-state"
+    class="empty-state w-100 d-grid place-items-center text-center rounded-4"
     :class="emptyStateClasses"
     :aria-label="title"
   >
-    <div class="empty-state-content">
+    <div class="w-100 empty-state-content">
       <div
         v-if="icon"
-        class="empty-state-icon"
+        class="empty-state-icon d-grid place-items-center mx-auto mb-3 rounded-circle bg-white text-dark shadow-sm"
         aria-hidden="true"
       >
         <i :class="icon"></i>
       </div>
 
-      <h3 class="empty-state-title">
+      <h3 class="empty-state-title h5 mb-2 fw-bold text-dark">
         <slot name="title">
           {{ title }}
         </slot>
@@ -21,7 +21,7 @@
 
       <p
         v-if="text || $slots.default"
-        class="empty-state-text"
+        class="empty-state-text mx-auto mb-0 text-secondary"
       >
         <slot>
           {{ text }}
@@ -30,12 +30,12 @@
 
       <div
         v-if="buttonText || $slots.action"
-        class="empty-state-actions"
+        class="mt-3"
       >
         <slot name="action">
           <button
             type="button"
-            class="empty-state-btn"
+            class="empty-state-btn btn btn-dark rounded-pill fw-bold px-4"
             @click="handleAction"
           >
             {{ buttonText }}
@@ -54,23 +54,28 @@ const props = defineProps({
     type: String,
     default: 'bi bi-inbox',
   },
+
   title: {
     type: String,
     default: 'Ничего не найдено',
   },
+
   text: {
     type: String,
     default: 'Попробуй изменить запрос или выбрать другую категорию.',
   },
+
   buttonText: {
     type: String,
     default: '',
   },
+
   size: {
     type: String,
     default: 'md',
     validator: value => ['sm', 'md', 'lg'].includes(value),
   },
+
   variant: {
     type: String,
     default: 'soft',
@@ -94,11 +99,6 @@ const handleAction = () => {
 
 <style scoped>
 .empty-state {
-  width: 100%;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  border-radius: 22px;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
@@ -135,63 +135,35 @@ const handleAction = () => {
 }
 
 .empty-state-content {
-  width: 100%;
   max-width: 360px;
 }
 
 .empty-state-icon {
   width: 58px;
   height: 58px;
-  margin: 0 auto 14px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  background: #fff;
-  color: #111;
   font-size: 25px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .empty-state-title {
-  margin: 0 0 7px;
-  color: #111;
-  font-size: 18px;
-  font-weight: 850;
   line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 .empty-state-text {
   max-width: 310px;
-  margin: 0 auto;
-  color: #777;
   font-size: 14px;
   line-height: 1.45;
 }
 
-.empty-state-actions {
-  margin-top: 18px;
-}
-
 .empty-state-btn {
   min-width: 112px;
-  height: 40px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
+  min-height: 40px;
   font-size: 14px;
-  font-weight: 800;
   line-height: 1;
-  cursor: pointer;
   transition:
     transform 0.15s ease,
     opacity 0.15s ease,
     background-color 0.15s ease;
-}
-
-.empty-state-btn:hover {
-  background: #222;
 }
 
 .empty-state-btn:active {
@@ -203,9 +175,13 @@ const handleAction = () => {
   outline-offset: 3px;
 }
 
+.place-items-center {
+  place-items: center;
+}
+
 @media (max-width: 576px) {
   .empty-state {
-    border-radius: 18px;
+    border-radius: 18px !important;
   }
 
   .empty-state--sm,

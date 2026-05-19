@@ -1,14 +1,14 @@
 <template>
   <nav
-    class="category-tabs"
+    class="category-tabs d-flex gap-2 w-100 overflow-x-auto overflow-y-hidden pb-3"
     aria-label="Категории"
   >
     <button
       v-for="category in normalizedCategories"
       :key="category.value"
       type="button"
-      class="category-tabs__button"
-      :class="{ 'category-tabs__button--active': isActive(category.value) }"
+      class="category-tabs__button btn btn-sm rounded-pill fw-bold flex-shrink-0 text-nowrap px-3"
+      :class="getButtonClass(category.value)"
       :aria-pressed="isActive(category.value)"
       @click="selectCategory(category.value)"
     >
@@ -29,8 +29,8 @@ const props = defineProps({
   categories: {
     type: Array,
     required: true,
-    validator: (items) => {
-      return items.every((item) => {
+    validator: items => {
+      return items.every(item => {
         if (typeof item === 'string') return true
 
         return (
@@ -45,11 +45,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits({
-  'update:modelValue': (value) => typeof value === 'string',
+  'update:modelValue': value => typeof value === 'string',
 })
 
 const normalizedCategories = computed(() => {
-  return props.categories.map((category) => {
+  return props.categories.map(category => {
     if (typeof category === 'string') {
       return {
         label: category,
@@ -64,9 +64,15 @@ const normalizedCategories = computed(() => {
   })
 })
 
-const isActive = (value) => props.modelValue === value
+const isActive = value => props.modelValue === value
 
-const selectCategory = (value) => {
+const getButtonClass = value => {
+  return isActive(value)
+    ? 'btn-dark border-dark'
+    : 'btn-light border'
+}
+
+const selectCategory = value => {
   if (isActive(value)) return
 
   emit('update:modelValue', value)
@@ -75,24 +81,7 @@ const selectCategory = (value) => {
 
 <style scoped>
 .category-tabs {
-  --tabs-gap: 9px;
-  --tabs-padding-bottom: 18px;
-  --tab-height: 36px;
-  --tab-padding-x: 15px;
-  --tab-radius: 999px;
-  --tab-border: #ececec;
-  --tab-bg: #fff;
-  --tab-color: #111;
-  --tab-active-bg: #111;
-  --tab-active-color: #fff;
-  --tab-active-border: #111;
-
-  display: flex;
-  gap: var(--tabs-gap);
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 2px 0 var(--tabs-padding-bottom);
+  padding-top: 2px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
@@ -103,28 +92,17 @@ const selectCategory = (value) => {
 }
 
 .category-tabs__button {
-  flex: 0 0 auto;
-  min-width: max-content;
-  height: var(--tab-height);
-  padding: 0 var(--tab-padding-x);
-  border: 1px solid var(--tab-border);
-  border-radius: var(--tab-radius);
-  background: var(--tab-bg);
-  color: var(--tab-color);
-  font-size: 14px;
-  font-weight: 700;
+  height: 36px;
   line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
   transition:
+    transform 0.18s ease,
     background-color 0.18s ease,
     border-color 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease;
+    color 0.18s ease;
 }
 
 .category-tabs__button:hover {
-  border-color: var(--tab-active-border);
+  border-color: #111 !important;
 }
 
 .category-tabs__button:active {
@@ -136,21 +114,15 @@ const selectCategory = (value) => {
   outline-offset: 2px;
 }
 
-.category-tabs__button--active {
-  border-color: var(--tab-active-border);
-  background: var(--tab-active-bg);
-  color: var(--tab-active-color);
-}
-
 @media (max-width: 576px) {
   .category-tabs {
-    --tabs-gap: 8px;
-    --tabs-padding-bottom: 14px;
-    --tab-height: 34px;
-    --tab-padding-x: 13px;
+    padding-bottom: 14px !important;
   }
 
   .category-tabs__button {
+    height: 34px;
+    padding-right: 13px !important;
+    padding-left: 13px !important;
     font-size: 13px;
   }
 }

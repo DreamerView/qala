@@ -1,25 +1,19 @@
 <template>
   <header
-    class="header-block"
-    :class="[
-      `header-block--${size}`,
-      {
-        'header-block--with-subtitle': hasSubtitle,
-        'header-block--with-action': hasRightContent,
-      },
-    ]"
+    class="header-block w-100 d-flex justify-content-between"
+    :class="headerClasses"
   >
-    <div class="header-block__main">
+    <div class="min-w-0">
       <component
         :is="headingTag"
-        class="header-block__title"
+        class="header-block__title mb-0 text-dark overflow-wrap-anywhere"
       >
         {{ title }}
       </component>
 
       <p
         v-if="hasSubtitle"
-        class="header-block__subtitle"
+        class="header-block__subtitle mb-0 mt-2 text-secondary"
       >
         {{ subtitle }}
       </p>
@@ -27,13 +21,13 @@
 
     <div
       v-if="hasRightContent"
-      class="header-block__aside"
+      class="flex-shrink-0 d-flex align-items-center"
     >
       <slot name="right">
         <RouterLink
           v-if="isLinkAction"
           :to="actionTo"
-          class="header-block__action"
+          class="header-block__action btn btn-light border rounded-pill d-inline-flex align-items-center justify-content-center gap-2 fw-bold text-dark text-decoration-none"
           :aria-label="actionLabel"
         >
           <i
@@ -50,7 +44,7 @@
         <button
           v-else
           type="button"
-          class="header-block__action"
+          class="header-block__action btn btn-light border rounded-pill d-inline-flex align-items-center justify-content-center gap-2 fw-bold text-dark"
           :disabled="disabled"
           :aria-label="actionLabel"
           @click="handleAction"
@@ -87,7 +81,7 @@ const props = defineProps({
   size: {
     type: String,
     default: 'page',
-    validator: (value) => ['page', 'section'].includes(value),
+    validator: value => ['page', 'section'].includes(value),
   },
 
   actionTo: {
@@ -154,6 +148,14 @@ const actionLabel = computed(() => {
   return props.actionAriaLabel || props.actionText || props.title
 })
 
+const headerClasses = computed(() => [
+  `header-block--${props.size}`,
+  {
+    'header-block--with-subtitle': hasSubtitle.value,
+    'header-block--with-action': hasRightContent.value,
+  },
+])
+
 function handleAction() {
   if (props.disabled) return
 
@@ -163,58 +165,49 @@ function handleAction() {
 
 <style scoped>
 .header-block {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
   gap: 18px;
 }
 
-.header-block__main {
-  min-width: 0;
+.header-block--page {
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.header-block--section {
+  align-items: center;
+  margin-bottom: 14px;
 }
 
 .header-block__title {
-  margin: 0;
-  color: #050505;
   font-weight: 850;
   line-height: 1.08;
   letter-spacing: -0.04em;
-  overflow-wrap: anywhere;
+}
+
+.header-block--page .header-block__title {
+  font-size: clamp(25px, 3vw, 30px);
+}
+
+.header-block--section .header-block__title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .header-block__subtitle {
   max-width: 720px;
-  margin: 7px 0 0;
-  color: #737373;
   font-size: 15px;
   font-weight: 500;
   line-height: 1.45;
-}
-
-.header-block__aside {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
 }
 
 .header-block__action {
   min-width: 42px;
   height: 42px;
   padding: 0 15px;
-  border: 1px solid #ececec;
-  border-radius: 999px;
-  background: #fff;
-  color: #111;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
   font-size: 14px;
-  font-weight: 800;
   line-height: 1;
   white-space: nowrap;
-  cursor: pointer;
   user-select: none;
   transition:
     background-color 0.18s ease,
@@ -224,7 +217,7 @@ function handleAction() {
 }
 
 .header-block__action:hover {
-  border-color: #e4e4e4;
+  border-color: #e4e4e4 !important;
   background: #f7f7f7;
   color: #111;
 }
@@ -244,24 +237,12 @@ function handleAction() {
   line-height: 1;
 }
 
-.header-block--page {
-  align-items: flex-start;
-  margin-bottom: 22px;
+.min-w-0 {
+  min-width: 0;
 }
 
-.header-block--page .header-block__title {
-  font-size: clamp(25px, 3vw, 30px);
-}
-
-.header-block--section {
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.header-block--section .header-block__title {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 860px) {
@@ -302,7 +283,7 @@ function handleAction() {
   }
 
   .header-block__subtitle {
-    margin-top: 5px;
+    margin-top: 5px !important;
   }
 }
 
